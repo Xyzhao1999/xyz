@@ -1,0 +1,26 @@
+/*
+ * Project: xyz
+ * Created Time: 2021/3/16 15:07:03
+ * Author: Xyzhao
+ * Brief: version
+ * Copyright (c) 2018-2021 Xyzhao. All rights reserved.
+ * This is a auto generated file. DO NOT EDIT!
+ */
+
+#ifndef XYZ_VERSION_HPP_
+#define XYZ_VERSION_HPP_
+
+#define XYZ_VERSION_MAJOR @XYZ_VERSION_MAJOR@
+#define XYZ_VERSION_MINOR @XYZ_VERSION_MINOR@
+#define XYZ_VERSION_PATCH @XYZ_VERSION_PATCH@
+
+#define XYZ_GIT_HASH "@XYZ_GIT_HASH@"
+
+namespace xyz {
+
+std::string get_xyz_version();
+
+} // namespace xyz
+
+
+#endif // XYZ_VERSION_HPP_

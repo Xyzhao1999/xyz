@@ -1,0 +1,21 @@
+/*
+ * Project: xyz
+ * Created Time: 2021/3/16 15:07:03
+ * Author: Xyzhao
+ * Brief: config
+ * Copyright (c) 2018-2021 Xyzhao. All rights reserved.
+ * This is a auto generated file. DO NOT EDIT!
+ */
+
+#ifndef XYZ_LOG_CONFIG_HPP_
+#define XYZ_LOG_CONFIG_HPP_
+
+#cmakedefine XYZ_LOG_CONSOLE
+#cmakedefine XYZ_LOG_ANDROID
+#cmakedefine XYZ_LOG_FILE
+
+#cmakedefine XYZ_LOG_FILENAME "@XYZ_LOG_FILENAME@"
+#cmakedefine XYZ_LOG_FILESIZE @XYZ_LOG_FILESIZE@
+#cmakedefine XYZ_LOG_FILE_NUM @XYZ_LOG_FILE_NUM@
+
+#endif // XYZ_LOG_CONFIG_HPP_
