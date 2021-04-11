@@ -1,15 +1,15 @@
 
 
 set(SPDLOG_GIT_TAG v1.8.5)
-set(SPDLOG_GIT_URL git@172.10.60.219:gitmirror-group/spdlog.git)
+set(SPDLOG_GIT_URL "git@github.com:gabime/spdlog.git" CACHE STRING "spdlog git url")
 
 FetchContent_Declare(
     spdlog
     GIT_REPOSITORY ${SPDLOG_GIT_URL}
     GIT_TAG ${SPDLOG_GIT_TAG}
+    SOURCE_DIR ${XYZ_ROOT_DIR}/ext/spdlog
 )
 
-#    SOURCE_DIR  ${XYZ_ROOT_DIR}/ext/spdlog
 
 FetchContent_MakeAvailable(spdlog)
 
