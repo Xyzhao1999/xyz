@@ -7,7 +7,6 @@ endif (NOT UNIX)
 
 set(XYZ_ROOT_DIR "${CMAKE_CURRENT_SOURCE_DIR}")
 
-
 include(cmake/utils.cmake)
 # Version
 set(XYZ_VERSION_MAJOR 0)
@@ -16,6 +15,7 @@ set(XYZ_VERSION_PATCH 1)
 set(XYZ_VERSION "${XYZ_VERSION_MAJOR}.${XYZ_VERSION_MINOR}.${XYZ_VERSION_PATCH}")
 
 project(xyz VERSION ${XYZ_VERSION} LANGUAGES CXX)
+find_package(Threads REQUIRED)
 
 set(XYZ_GIT_HASH "unknown")
 get_git_hash(XYZ_GIT_HASH)
@@ -40,30 +40,34 @@ if (NOT CMAKE_CXX_STANDARD)
   set(CMAKE_CXX_STANDARD 11)
   set(CMAKE_CXX_STANDARD_REQUIRED ON)
 endif ()
+
+
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -Werror -Wextra -fnon-call-exceptions -fPIE -fomit-frame-pointer -fvisibility=hidden")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Werror -Wextra -fnon-call-exceptions -fPIE -fomit-frame-pointer -fvisibility=hidden")
+
+set(CMAKE_CUDA_FLAGS "${CMAKE_CUDA_FLAGS} -Xcompiler='-Wall -Wextra'")
+set(CMAKE_CUDA_FLAGS "${CMAKE_CUDA_FLAGS} --default-stream per-thread")
+
 if (CMAKE_BUILD_TYPE MATCHES "Debug")
   set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -g3 -Og")
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g3 -Og")
 elseif (CMAKE_BUILD_TYPE MATCHES "Release")
-  set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -O3 -Wall -Werror -Wextra -DNDEBUG -fnon-call-exceptions -fPIE -fomit-frame-pointer -fvisibility=hidden")
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -Wall -Werror -Wextra -DNDEBUG -fnon-call-exceptions -fPIE -fomit-frame-pointer -fvisibility=hidden")
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fvisibility-inlines-hidden")
+  set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -O3 -DNDEBUG")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -DNDEBUG")
+
   set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fstrict-aliasing -ffunction-sections -fdata-sections -ffast-math")
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fstrict-aliasing -ffunction-sections -fdata-sections -ffast-math")# -fno-rtti -fno-exceptions ")
+
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fvisibility-inlines-hidden")
+
+  set(CMAKE_CUDA_FLAGS "${CMAKE_CUDA_FLAGS} -Xcompiler='-O3 -DNDEBUG'")
+
   if (ANDROID)
     set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -s")
     set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -pie -fPIE -s")
     set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -Wl,--gc-sections")
   endif ()
 endif ()
-
-
-include(FetchContent)
-# FetchContent_MakeAvailable was not added until CMake 3.14
-if (${CMAKE_VERSION} VERSION_LESS 3.14)
-  include(add_FetchContent_MakeAvailable.cmake)
-endif ()
-
-
 
 
 include_directories(include)

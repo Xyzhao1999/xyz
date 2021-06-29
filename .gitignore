@@ -57,4 +57,4 @@ tags
 # Persistent undo
 [._]*.un~
 
-/ext
+/external
