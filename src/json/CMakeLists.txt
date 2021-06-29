@@ -1,6 +1,6 @@
 
 set(JSON_GIT_TAG v3.9.1)
-set(JSON_GIT_URL https://github.com/nlohmann/json.git)
+set(JSON_GIT_URL https://github.com/nlohmann/json.git CACHE STRING "json git url")
 add_git_external_party(nlohmann_json ${JSON_GIT_URL} ${JSON_GIT_TAG})
 
 
