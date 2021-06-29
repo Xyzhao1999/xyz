@@ -2,6 +2,9 @@
 add_library(xyz INTERFACE)
 add_library(xyz::xyz ALIAS xyz)
 
+target_include_directories(xyz INTERFACE ${XYZ_ROOT_DIR}/include)
+
+
 set(XYZ_BASE_SRCS
     ${XYZ_ROOT_DIR}/src/version.cpp
     ${XYZ_ROOT_DIR}/include/xyz/version.h
