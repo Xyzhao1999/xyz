@@ -42,7 +42,7 @@ enum XYZ_LOG_LEVEL {
 };
 
 namespace xyz {
-
+namespace log {
 class Log {
  public:
   static Log &instance();
@@ -64,51 +64,63 @@ class Log {
 
 };
 
-void _log_printf(int level_enum, const char *tag, spdlog::source_loc loc, const std::string &str) noexcept;
+void _args_check(const char *format, ...) __attribute__ ((format (printf, 1, 2)));
+
+void _printf(int level_enum, const char *tag, spdlog::source_loc loc, const std::string &str) noexcept;
+
+} // namespace log
 
 } // namespace xyz
 
 
 
-#define XYZ_LOG_PRINTF(Level, tag, format, ...) \
-  xyz::_log_printf(Level, tag, spdlog::source_loc{__FILE__, __LINE__, SPDLOG_FUNCTION}, fmt::sprintf(format, ##__VA_ARGS__))
+#define XYZ_INTERNAL_PRINTF(Level, tag, format, ...)                   \
+  do {                                                            \
+    if (false) {xyz::log::_args_check(format, ##__VA_ARGS__);}    \
+    xyz::log::_printf(Level, tag, spdlog::source_loc{__FILE__, __LINE__, SPDLOG_FUNCTION}, fmt::sprintf(format, ##__VA_ARGS__)); \
+  } while(0)
 
-#define XYZ_LOG(Level, tag, format, ...) XYZ_LOG_PRINTF(Level, tag, format, ##__VA_ARGS__)
+#define XYZ_LOG(Level, tag, format, ...)                      \
+  do {                                                        \
+    if(XYZ_LOG_ACTIVE_LEVEL <= Level) {                       \
+      XYZ_INTERNAL_PRINTF(Level, tag, format, ##__VA_ARGS__);      \
+    }                                                         \
+  } while(0)
 
 #if XYZ_LOG_ACTIVE_LEVEL <= XYZ_LOG_LEVEL_TRACE
-#define XYZ_LOG_TRACE(tag, format, ...) XYZ_LOG_PRINTF(XYZ_LOG_LEVEL::TRACE, tag, format, ##__VA_ARGS__)
+#define XYZ_TRACE(tag, format, ...) XYZ_INTERNAL_PRINTF(XYZ_LOG_LEVEL::TRACE, tag, format, ##__VA_ARGS__)
 #else
-#define XYZ_LOG_TRACE(tag, format, ...) (void)0
+#define XYZ_TRACE(tag, format, ...) (void)0
 #endif
 
 #if XYZ_LOG_ACTIVE_LEVEL <= XYZ_LOG_LEVEL_DEBUG
-#define XYZ_LOG_DEBUG(tag, format, ...) XYZ_LOG_PRINTF(XYZ_LOG_LEVEL::DEBUG, tag, format, ##__VA_ARGS__)
+#define XYZ_DEBUG(tag, format, ...) XYZ_INTERNAL_PRINTF(XYZ_LOG_LEVEL::DEBUG, tag, format, ##__VA_ARGS__)
 #else
-#define XYZ_LOG_DEBUG(tag, format, ...) (void)0
+#define XYZ_DEBUG(tag, format, ...) (void)0
 #endif
 
 #if XYZ_LOG_ACTIVE_LEVEL <= XYZ_LOG_LEVEL_INFO
-#define XYZ_LOG_INFO(tag, format, ...) XYZ_LOG_PRINTF(XYZ_LOG_LEVEL::INFO, tag, format, ##__VA_ARGS__)
+#define XYZ_INFO(tag, format, ...) XYZ_INTERNAL_PRINTF(XYZ_LOG_LEVEL::INFO, tag, format, ##__VA_ARGS__)
 #else
-#define XYZ_LOG_INFO(tag, format, ...) (void)0
+#define XYZ_INFO(tag, format, ...) (void)0
 #endif
 
 #if XYZ_LOG_ACTIVE_LEVEL <= XYZ_LOG_LEVEL_WARN
-#define XYZ_LOG_WARN(tag, format, ...) XYZ_LOG(XYZ_LOG_LEVEL::WARN, tag, format, ##__VA_ARGS__)
+#define XYZ_WARN(tag, format, ...) XYZ_INTERNAL_PRINTF(XYZ_LOG_LEVEL::WARN, tag, format, ##__VA_ARGS__)
 #else
-#define XYZ_LOG_WARN(tag, format, ...) (void)0
+#define XYZ_WARN(tag, format, ...) (void)0
 #endif
 
 #if XYZ_LOG_ACTIVE_LEVEL <= XYZ_LOG_LEVEL_ERROR
-#define XYZ_LOG_ERROR(tag, format, ...) XYZ_LOG_PRINTF(XYZ_LOG_LEVEL::ERROR, tag, format, ##__VA_ARGS__)
+#define XYZ_ERROR(tag, format, ...) XYZ_INTERNAL_PRINTF(XYZ_LOG_LEVEL::ERROR, tag, format, ##__VA_ARGS__)
 #else
-#define XYZ_LOG_ERROR(tag, format, ...) (void)0
+#define XYZ_ERROR(tag, format, ...) (void)0
 #endif
 
 #if XYZ_LOG_ACTIVE_LEVEL <= XYZ_LOG_LEVEL_CRITICAL
-#define XYZ_LOG_CRITICAL(tag, format, ...) XYZ_LOG_PRINTF(XYZ_LOG_LEVEL::CRITICAL, tag, format, ##__VA_ARGS__)
+#define XYZ_CRITICAL(tag, format, ...) XYZ_INTERNAL_PRINTF(XYZ_LOG_LEVEL::CRITICAL, tag, format, ##__VA_ARGS__)
 #else
-#define XYZ_LOG_CRITICAL(tag, format, ...) (void)0
+#define XYZ_CRITICAL(tag, format, ...) (void)0
 #endif
 
 #endif //INCLUDE_XYZ_LOG_LOG_HPP_

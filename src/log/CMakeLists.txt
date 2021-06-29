@@ -1,16 +1,8 @@
 
-
-set(SPDLOG_GIT_TAG v1.8.5)
 set(SPDLOG_GIT_URL "https://github.com/gabime/spdlog.git" CACHE STRING "spdlog git url")
+set(SPDLOG_GIT_TAG v1.8.5)
+
 add_git_external_party(spdlog ${SPDLOG_GIT_URL} ${SPDLOG_GIT_TAG})
-#FetchContent_Declare(
-#    spdlog
-#    GIT_REPOSITORY ${SPDLOG_GIT_URL}
-#    GIT_TAG ${SPDLOG_GIT_TAG}
-#    SOURCE_DIR ${XYZ_ROOT_DIR}/ext/spdlog
-#)
-#
-#FetchContent_MakeAvailable(spdlog)
 
 # set config for log
 option(XYZ_LOG_CONSOLE "print log to console" ON)

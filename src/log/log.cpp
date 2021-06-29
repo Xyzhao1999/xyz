@@ -11,7 +11,6 @@
 #include <iostream>
 #include <memory>
 
-
 #include <spdlog/spdlog.h>
 #include <spdlog/pattern_formatter.h>
 #include <spdlog/fmt/bundled/printf.h>
@@ -29,17 +28,21 @@
 #if defined(__ANDROID__) && defined(XYZ_LOG_ANDROID)
 #include <spdlog/sinks/android_sink.h>
 #endif
+#include <spdlog/sinks/android_sink.h>
 
-xyz::Log &xyz::Log::instance() {
-  static xyz::Log log;
+namespace xyz {
+namespace log {
+
+Log &Log::instance() {
+  static Log log;
   return log;
 }
 
-std::unique_ptr<spdlog::logger> &xyz::Log::logger() {
+std::unique_ptr<spdlog::logger> &Log::logger() {
   return logger_;
 }
 
-int xyz::Log::init() {
+int Log::init() {
   if (logger_ != nullptr) {
     std::cout << "Log is initialized !" << std::endl;
     return -1;
@@ -57,11 +60,10 @@ int xyz::Log::init() {
       log_sinks.push_back(console_sink);
     }
 #endif
-
 #if defined(__ANDROID__) && defined(XYZ_LOG_ANDROID)
     {
         std::string android_log_format = "[%s,%!:%#]%v";
-        auto android_sink = std::make_shared<spdlog::sinks::android_sink_mt>(" Log");
+        auto android_sink = std::make_shared<spdlog::sinks::android_sink_mt>(" xyz");
         android_sink->set_level(spdlog::level::trace);
         android_sink->set_pattern(android_log_format);
         log_sinks.push_back(android_sink);
@@ -91,7 +93,7 @@ int xyz::Log::init() {
 #endif
 
     if (!log_sinks.empty()) {
-      logger_ = spdlog::details::make_unique<spdlog::logger>("Log", log_sinks.begin(), log_sinks.end());
+      logger_ = spdlog::details::make_unique<spdlog::logger>("xyz::log", log_sinks.begin(), log_sinks.end());
       logger_->set_level(spdlog::level::trace);
       logger_->flush_on(spdlog::level::warn);
       spdlog::flush_every(std::chrono::seconds(3));
@@ -106,11 +108,16 @@ int xyz::Log::init() {
   return 0;
 }
 
-void xyz::_log_printf(int level_enum, const char *tag,
-                      spdlog::source_loc loc, const std::string &str) noexcept {
-  auto logger = &xyz::Log::instance().logger();
-  if (level_enum >= XYZ_LOG_ACTIVE_LEVEL && level_enum < XYZ_LOG_LEVEL::OFF &&
-      (*logger) && (*logger)->should_log(static_cast<spdlog::level::level_enum>(level_enum))) {
+void _printf(int level_enum, const char *tag,
+             spdlog::source_loc loc, const std::string &str) noexcept {
+  auto logger = &Log::instance().logger();
+  if ((*logger) && (*logger)->should_log(static_cast<spdlog::level::level_enum>(level_enum))) {
     (*logger)->log(loc, static_cast<spdlog::level::level_enum>(level_enum), "[{:^.8s}]: {}", tag, str);
   }
 }
+
+__attribute__((unused)) static int __xyz_log_init_flag__ = xyz::log::Log::instance().init();
+
+} // namespace log
+} // namespace xyz::log
+
