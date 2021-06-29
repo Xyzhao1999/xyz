@@ -1,8 +1,7 @@
 
 
 set(SPDLOG_GIT_TAG v1.8.5)
-set(SPDLOG_GIT_URL "git@github.com:gabime/spdlog.git" CACHE STRING "spdlog git url")
-
+set(SPDLOG_GIT_URL "https://github.com/gabime/spdlog.git" CACHE STRING "spdlog git url")
 add_git_external_party(spdlog ${SPDLOG_GIT_URL} ${SPDLOG_GIT_TAG})
 #FetchContent_Declare(
 #    spdlog

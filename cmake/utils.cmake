@@ -4,13 +4,19 @@ if (${CMAKE_VERSION} VERSION_LESS 3.14)
   include(add_FetchContent_MakeAvailable.cmake)
 endif ()
 
+if (NOT PROJECT_ROOT)
+  message(STATUS "Not determined PROJECT_ROOT, set to ${CMAKE_CURRENT_LIST_DIR}")
+  set(PROJECT_ROOT ${CMAKE_CURRENT_LIST_DIR})
+endif ()
+
 if (NOT add_git_external_party)
   macro(add_git_external_party _NAME _URL _TAG)
+    message(STATUS "Get ${_NAME} tag ${_TAG} from ${_URL}")
     FetchContent_Declare(
         ${_NAME}
         GIT_REPOSITORY ${_URL}
         GIT_TAG ${_TAG}
-        SOURCE_DIR ${XYZ_ROOT_DIR}/external/${_NAME}
+        SOURCE_DIR ${PROJECT_ROOT}/external/${_NAME}
         GIT_SHALLOW TRUE
         GIT_PROGRESS TRUE
         USES_TERMINAL_DOWNLOAD TRUE
@@ -19,6 +25,7 @@ if (NOT add_git_external_party)
   endmacro()
   set(add_git_external_party TRUE)
 endif ()
+
 
 if (NOT get_git_hash)
   macro(get_git_hash _GIT_HASH)

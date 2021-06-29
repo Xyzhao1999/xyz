@@ -5,7 +5,8 @@ if (NOT UNIX)
   message(FATAL_ERROR "This CMakeList only support in UNIX platform now.")
 endif (NOT UNIX)
 
-set(XYZ_ROOT_DIR "${CMAKE_CURRENT_SOURCE_DIR}")
+set(XYZ_ROOT_DIR ${CMAKE_CURRENT_SOURCE_DIR})
+set(PROJECT_ROOT ${XYZ_ROOT_DIR})
 
 include(cmake/utils.cmake)
 # Version
