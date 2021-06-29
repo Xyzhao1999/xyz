@@ -11,10 +11,10 @@
 
 #include <nlohmann/json.hpp>
 
-namespace airia {
+namespace xyz {
 
 using json = nlohmann::json;
 
-} // namespace airia
+} // namespace xyz
 
 #endif //XYZ_INCLUDE_XYZ_JSON_JSON_H_

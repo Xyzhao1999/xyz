@@ -14,7 +14,7 @@
 int main() {
   std::string json_string = R"({"happy": true, "pi": 3.141})";
 
-  airia::json test_json = airia::json::parse(json_string);
+  xyz::json test_json = xyz::json::parse(json_string);
 
   XYZ_INFO("json", "%lf", double(test_json["pi"]));
 
